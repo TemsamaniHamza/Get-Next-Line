@@ -47,5 +47,4 @@ char *get_next_line(int fd)
         return (NULL);
 	ptr = ft_check_line(ptr,fd, buffer);
     return (ptr);
-} 
-
+}
