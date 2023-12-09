@@ -15,26 +15,28 @@
 char *ft_check_line(char *ptr, int fd, char *buffer)
 {
 	int rd;
-	
+	char *temp;
+
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		return NULL;
-	rd = read(fd, buffer, BUFFER_SIZE);
-	buffer[rd] = '\0';
-	if (rd > 0 && ft_strchr(buffer, '\n'))
-	{
-		ptr = ft_strjoin(ptr,buffer);
-		free(buffer);
-		ft_check_line(ptr,fd,buffer);
-		return (ptr);		
-	}
-	else if (rd == 0)
-	{
-		free(buffer);
-		return ptr;
-	}
-	free(buffer);
-	ft_check_line(ptr,fd,buffer);	
+    while ((rd = read(fd, buffer, BUFFER_SIZE)) > 0)
+    {
+        buffer[rd] = '\0';
+
+        if (ft_strchr(buffer, '\n') == 1)
+        {
+            temp = ft_strjoin(ptr, buffer);
+            free(ptr);
+            free(buffer);
+            return temp;
+        }
+        temp = ft_strjoin(ptr, buffer);  
+        free(ptr);
+        ptr = temp;
+    }
+    // free(buffer);
+    return ptr;
 }
 
 char *get_next_line(int fd)
@@ -43,15 +45,7 @@ char *get_next_line(int fd)
     char *buffer;
     if (fd<0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > 2147483647)
         return (NULL);
-	ptr = ft_check_line(ptr,fd, buffer);	
-	return (ptr);
-}
-
-int main()
-{
-    int fd = open("tjriba.txt", O_CREAT | O_RDWR | O_APPEND);
-	char *str = get_next_line(fd);
-	printf("%s", str);
-	return (0);
-}
+	ptr = ft_check_line(ptr,fd, buffer);
+    return (ptr);
+} 
 
