@@ -2,10 +2,10 @@
 
 char *ft_check_line(char *ptr, int fd, char *buffer)
 {
-	int rd;
+	ssize_t rd;
 	char *temp;
 
-	buffer = malloc(BUFFER_SIZE + 1);
+	buffer = malloc((size_t)(BUFFER_SIZE) + 1);
 	if (!buffer)
 		return NULL;
     while ((rd = read(fd, buffer, BUFFER_SIZE)) > 0)
@@ -54,24 +54,41 @@ char *ft_full_ptr(char *ptr, char *buffer, size_t i, int flag)
     size_t j = 0;
     char *reminder;
     size_t k = 0;
+    size_t n = 1;
 
     ptr = malloc(i + 2);
-    while (buffer[j] != '\0' && buffer[j] != '\n')
+    if (!ptr)
+        return NULL;
+    while (j < i)
     {
         ptr[j] = buffer[j];
         j++;
     }
+    if (buffer[j] == '\n')
+        n++;
+    // if (j == i)
+    //     j--;
+/*     printf("-- %c --\n", buffer[j]);
+    printf("-- %c --\n", ptr[j]); */
     ptr[j] = '\n';
     ptr[j + 1] = '\0';
+/*     printf("this is j - 1 : %d\n", ptr[j - 1]);
+    printf("this is j : %d\n", ptr[j]);
+    printf("this is j + 1 : %d\n", ptr[j+1]);
+    printf("----> %ld\n", j); */
+    // printf("+++this is i ++++ %ld\n", i);
     if (flag == 1)
     {
-        reminder = malloc((ft_strlen(buffer)) - j + 1);
+        reminder = malloc((ft_strlen(buffer)) - j + n);
+        int ll = (ft_strlen(buffer)) - j + n;
+        printf("this is buffer in %c\n", buffer[j]);
+        printf("this is ll : %d --->>\n ", ll);
         if (!reminder)
         {
             free(ptr);
             return NULL;
         }
-        j++;
+        // j++;
         while (buffer[j] != '\0')
         {   
             reminder[k] = buffer[j];
@@ -93,16 +110,16 @@ char *get_next_line(int fd)
     char *buffer;
     static char *reminder;
     size_t i = 0;
-    static int j = 0;
+    static int j;
 
     buffer = NULL;
 
     // printf("how many times the functions is used is : %d\n", j);
-    if (fd <0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > 2147483647)
+    if (fd <0 || BUFFER_SIZE <= 0)
         return (NULL);
     if (j == 0)
     {
-        printf("j = 0 -> %d->", j);
+        // printf("j = 0 -> %d->", j);
 	    buffer = ft_check_line(ptr,fd, buffer);
         if (buffer == NULL)
         {
@@ -118,7 +135,7 @@ char *get_next_line(int fd)
     }
     if (j > 0)
     {
-        printf("j > 0 -> %d->", j);
+        // printf("j > 0 -> %d->", j);
 	    buffer = ft_check_line(reminder,fd, buffer);
         if (buffer == NULL)
         {
