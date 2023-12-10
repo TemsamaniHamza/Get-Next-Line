@@ -27,6 +27,11 @@ char *ft_check_line(char *ptr, int fd, char *buffer)
         }
         ptr = temp;
     }
+    if (rd == 0 && ptr[0] == 0 )
+    {
+        free(buffer);
+        return NULL;
+    }
     if (rd == 0)
     {
         free(buffer);
@@ -89,7 +94,10 @@ char *get_next_line(int fd)
     {
 	    buffer = ft_check_line(ptr,fd, buffer);
         if (buffer == NULL)
+        {
+            free(buffer);
             return NULL;
+        }
         // printf("1 | the buffer in this moment is %s\n", buffer);
         i = ft_check_newline(buffer);
         ptr = ft_full_ptr(ptr,buffer,i,0);
@@ -101,18 +109,17 @@ char *get_next_line(int fd)
     {
 	    buffer = ft_check_line(reminder,fd, buffer);
         if (buffer == NULL)
+        {
+            free(buffer);
             return NULL;
-        // printf("1 | the buffer in this moment is %s\n", buffer);
+        }
         i = ft_check_newline(buffer);
-        // printf("x | the index where the new line is in is %zu\n", i);
         ptr = ft_full_ptr(ptr,buffer,i,0);
-        // printf("2 | the ptr in this moment is %s\n", ptr);
         reminder = ft_full_ptr(ptr,buffer,i,1);
-        // printf("3 | the reminder is : ++%s++\n", reminder);
-        // return(ptr);
     }
     j++;
     free(buffer);
+    // printf("the ptr rn is --%d--", ptr[0]);
     return (ptr);
 }
 
@@ -122,10 +129,11 @@ int main()
     char *str;
 
     int i = 0;
-    while (i < 19)
+    while (i < 2)
     {
         str = get_next_line(fd);
         printf("%s", str);
+        free(str);
         i++;
     }
 /*     str = get_next_line(fd);
