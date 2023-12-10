@@ -68,27 +68,89 @@ char *ft_full_ptr(char *ptr, char *buffer, size_t i, int flag)
         n++;
     // if (j == i)
     //     j--;
-/*     printf("-- %c --\n", buffer[j]);
-    printf("-- %c --\n", ptr[j]); */
+    // printf("-- %c --\n", buffer[j]);
+    // printf("-- %c --\n", ptr[j]);
     ptr[j] = '\n';
     ptr[j + 1] = '\0';
-/*     printf("this is j - 1 : %d\n", ptr[j - 1]);
-    printf("this is j : %d\n", ptr[j]);
-    printf("this is j + 1 : %d\n", ptr[j+1]);
-    printf("----> %ld\n", j); */
+    // printf("this is j - 1 : %d\n", ptr[j - 1]);
+    // printf("this is j : %d\n", ptr[j]);
+    // printf("this is j + 1 : %d\n", ptr[j+1]);
+    // printf("----> %ld\n", j);
     // printf("+++this is i ++++ %ld\n", i);
     if (flag == 1)
     {
         reminder = malloc((ft_strlen(buffer)) - j + n);
-        int ll = (ft_strlen(buffer)) - j + n;
-        printf("this is buffer in %c\n", buffer[j]);
-        printf("this is ll : %d --->>\n ", ll);
+        // int ll = (ft_strlen(buffer)) - j + n;
+        // printf("this is buffer in %c\n", buffer[j]);
+        // printf("this is ll : %d --->>\n", ll); 
         if (!reminder)
         {
             free(ptr);
             return NULL;
         }
-        // j++;
+        if (buffer[j] != '\0' && buffer[j] == '\n')
+            j++;
+        while (buffer[j])
+        {  
+            // printf("|--%d--|\n", buffer[j]);
+            reminder[k] = buffer[j];
+            k++;
+            j++;
+        }
+        reminder[k] = '\0';
+        // printf("**%s**", reminder);
+        // printf("k is %ld\n", k);
+        // printf("remainde[k][%c]---\n", reminder[k]);
+        // printf("remainder[k][%c]\n",reminder[k-1]);
+        // printf("remainder[k][%d]\n",reminder[0]);
+        // printf("the remainder is : %s \n", reminder);
+        free(ptr);
+        // free(buffer);
+        return (reminder);
+        // printf("---%s\n", reminder);
+    }
+    return (ptr);
+}
+/* char *ft_full_ptr(char *ptr, char *buffer, size_t i, int flag)
+{
+    size_t j = 0;
+    char *reminder;
+    size_t k = 0;
+    size_t n = 1;
+
+    ptr = malloc(i + 2);
+    if (!ptr)
+        return NULL;
+    while (j < i)
+    {
+        ptr[j] = buffer[j];
+        j++;
+    }
+    if (buffer[j] == '\n')
+        n++;
+    // if (j == i)
+    //     j--;
+    // printf("-- %c --\n", buffer[j]);
+    // printf("-- %c --\n", ptr[j]);
+    ptr[j] = '\n';
+    ptr[j + 1] = '\0';
+    // printf("this is j - 1 : %d\n", ptr[j - 1]);
+    // printf("this is j : %d\n", ptr[j]);
+    // printf("this is j + 1 : %d\n", ptr[j+1]);
+    // printf("----> %ld\n", j);
+    // printf("+++this is i ++++ %ld\n", i);
+    if (flag == 1)
+    {
+        reminder = malloc((ft_strlen(buffer)) - j + 1);
+        int ll = (ft_strlen(buffer)) - j + 1;
+        // printf("this is buffer in %c\n", buffer[j]);
+        // printf("this is ll : %d --->>\n ", ll);
+        if (!reminder)
+        {
+            free(ptr);
+            return NULL;
+        }
+        j++;
         while (buffer[j] != '\0')
         {   
             reminder[k] = buffer[j];
@@ -102,8 +164,7 @@ char *ft_full_ptr(char *ptr, char *buffer, size_t i, int flag)
         // printf("---%s\n", reminder);
     }
     return (ptr);
-}
-
+} */
 char *get_next_line(int fd)
 {
     static char *ptr;
