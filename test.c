@@ -122,7 +122,7 @@ int main()
     char *str;
 
     int i = 0;
-    while (i < 18)
+    while (i < 19)
     {
         str = get_next_line(fd);
         printf("%s", str);
