@@ -27,6 +27,11 @@ char *ft_check_line(char *ptr, int fd, char *buffer)
         }
         ptr = temp;
     }
+    if (rd == 0 && ptr == NULL)
+    {
+        free (buffer);
+        return NULL;
+    }
     if (rd == 0 && ptr[0] == 0 )
     {
         free(buffer);
@@ -45,7 +50,7 @@ char *ft_check_line(char *ptr, int fd, char *buffer)
 size_t  ft_check_newline(char *buffer)
 {
     size_t i = 0;
-    while (buffer[i] != '\n' && buffer[i] != '\0')
+    while (buffer[i] != '\n' || buffer[i] != '\0')
         i++;
     return (i);
 }
@@ -217,19 +222,21 @@ char *get_next_line(int fd)
 
 int main()
 {
-    int fd = open("tjriba.txt", O_CREAT | O_RDWR | O_APPEND);
+    int fd = open("test.txt", O_CREAT | O_RDWR | O_APPEND);
     char *str;
-
+    int i = 0;
     str = get_next_line(fd);
-    printf("%s", str);
+    while (str[i++])
+        printf("--%d**", str[i]);
     free(str);
 
-    str = get_next_line(fd);
-    printf("%s", str);
-    free(str);
 
-    str = get_next_line(fd);
-    printf("%s", str);
-    free(str);
+    // str = get_next_line(fd);
+    // printf("%s", str);
+    // free(str);
+
+    // str = get_next_line(fd);
+    // printf("%s", str);
+    // free(str); 
     close (fd);
-}
+} 
