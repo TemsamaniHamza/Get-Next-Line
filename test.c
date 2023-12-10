@@ -23,7 +23,7 @@ char *ft_check_line(char *ptr, int fd, char *buffer)
         if (!temp)
         {
             free(buffer);
-            return NULL;  // Handle ft_strjoin failure
+            return NULL;
         }
         ptr = temp;
     }
@@ -38,7 +38,7 @@ char *ft_check_line(char *ptr, int fd, char *buffer)
         return ptr;
     }
         // return NULL;
-    // free(buffer);
+    free(buffer);
     return ptr;
 }
 
@@ -55,7 +55,7 @@ char *ft_full_ptr(char *ptr, char *buffer, size_t i, int flag)
     char *reminder;
     size_t k = 0;
 
-    ptr = malloc(i + 1);
+    ptr = malloc(i + 2);
     while (buffer[j] != '\0' && buffer[j] != '\n')
     {
         ptr[j] = buffer[j];
@@ -63,9 +63,14 @@ char *ft_full_ptr(char *ptr, char *buffer, size_t i, int flag)
     }
     ptr[j] = '\n';
     ptr[j + 1] = '\0';
-    reminder = malloc((ft_strlen(buffer)) - j);
     if (flag == 1)
     {
+        reminder = malloc((ft_strlen(buffer)) - j + 1);
+        if (!reminder)
+        {
+            free(ptr);
+            return NULL;
+        }
         j++;
         while (buffer[j] != '\0')
         {   
@@ -74,11 +79,14 @@ char *ft_full_ptr(char *ptr, char *buffer, size_t i, int flag)
             j++;
         }
         reminder[k] = '\0';
+        free(ptr);
+        // free(buffer);
         return (reminder);
         // printf("---%s\n", reminder);
     }
     return (ptr);
 }
+
 char *get_next_line(int fd)
 {
     static char *ptr;
@@ -87,11 +95,14 @@ char *get_next_line(int fd)
     size_t i = 0;
     static int j = 0;
 
+    buffer = NULL;
+
     // printf("how many times the functions is used is : %d\n", j);
     if (fd <0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > 2147483647)
         return (NULL);
     if (j == 0)
     {
+        printf("j = 0 -> %d->", j);
 	    buffer = ft_check_line(ptr,fd, buffer);
         if (buffer == NULL)
         {
@@ -107,6 +118,7 @@ char *get_next_line(int fd)
     }
     if (j > 0)
     {
+        printf("j > 0 -> %d->", j);
 	    buffer = ft_check_line(reminder,fd, buffer);
         if (buffer == NULL)
         {
@@ -116,40 +128,30 @@ char *get_next_line(int fd)
         i = ft_check_newline(buffer);
         ptr = ft_full_ptr(ptr,buffer,i,0);
         reminder = ft_full_ptr(ptr,buffer,i,1);
+        // free(reminder);
     }
     j++;
-    free(buffer);
+    if (buffer != NULL)
+        free(buffer);
     // printf("the ptr rn is --%d--", ptr[0]);
     return (ptr);
 }
 
 int main()
 {
-    int fd = open("get_next_line.h", O_CREAT | O_RDWR | O_APPEND);
+    int fd = open("tjriba.txt", O_CREAT | O_RDWR | O_APPEND);
     char *str;
 
-    int i = 0;
-    while (i < 2)
-    {
-        str = get_next_line(fd);
-        printf("%s", str);
-        free(str);
-        i++;
-    }
-/*     str = get_next_line(fd);
+    str = get_next_line(fd);
     printf("%s", str);
-    free(str);  */
+    free(str);
+
+    str = get_next_line(fd);
+    printf("%s", str);
+    free(str);
+
+    str = get_next_line(fd);
+    printf("%s", str);
+    free(str);
+    close (fd);
 }
-/* char *get_next_line(int fd)
-{
-    char *ptr;
-    char *buffer;
-    size_t i = 0;
-    if (fd<0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > 2147483647)
-        return (NULL);
-	ptr = ft_check_line(buffer,fd, ptr);
-    i = ft_check_newline(ptr);
-    buffer = ft_full_ptr(buffer,ptr,i,0);
-    free(ptr);
-    return (buffer);
-}  */
